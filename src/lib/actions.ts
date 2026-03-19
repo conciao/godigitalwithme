@@ -10,7 +10,7 @@ export async function authenticate(
   try {
     await signIn("credentials", {
       ...Object.fromEntries(formData),
-      redirectTo: "/dashboard",
+      redirectTo: "/", // Redirect to home, let the middleware/auth resolve the final dashboard
     });
   } catch (error) {
     if (error instanceof AuthError) {

@@ -49,14 +49,15 @@ export default function AdminDashboardContent() {
       setPlatformInquiries(inqData);
 
       // Update stats summary
-      const totalInquiries = compData.reduce((acc, curr) => acc + (curr.inquiries || 0), 0);
-      const totalReservations = compData.reduce((acc, curr) => acc + (curr.reservations || 0), 0);
+      const totalInquiries = compData.reduce((acc, curr: any) => acc + (curr.inquiriesCount || 0), 0);
+      const totalReservations = compData.reduce((acc, curr: any) => acc + (curr.reservationsCount || 0), 0);
+      const totalRevenue = compData.reduce((acc, curr: any) => acc + (curr.revenueTotal || 0), 0);
       
       setStats([
         { icon: "🏢", label: "Total Companies", value: compData.length.toString(), change: "Live from Supabase", color: "#7c3aed" },
-        { icon: "📋", label: "Total Inquiries", value: totalInquiries.toString(), change: "All tenants", color: "#0ea5e9" },
+        { icon: "📋", label: "Total Inquiries", value: totalInquiries.toString(), change: `${platformInquiries.length} platform leads`, color: "#0ea5e9" },
         { icon: "📅", label: "Reservations", value: totalReservations.toString(), change: "All time", color: "#10b981" },
-        { icon: "💰", label: "Platform Revenue", value: "₱0", change: "Subscription billing TBD", color: "#f59e0b" },
+        { icon: "💰", label: "Platform Revenue", value: `₱${totalRevenue.toLocaleString()}`, change: "Gross Booking Value", color: "#f59e0b" },
       ]);
     } catch (err) {
       console.error("Failed to load dashboard data:", err);
