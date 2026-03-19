@@ -5,9 +5,12 @@ import { usePathname } from "next/navigation";
 export default function DemoRibbon() {
   const pathname = usePathname();
   
-  // Hide on login or dashboard if preferred, but user said "every page"
-  // Let's keep it visible everywhere as requested.
-  
+  // Only show the demo ribbon on the demo website and dashboard.
+  // Hide it on the main platform landing page, login, or admin panels.
+  if (!pathname.startsWith("/venue") && !pathname.startsWith("/dashboard")) {
+    return null;
+  }
+
   return (
     <div style={{
       background: "linear-gradient(to right, #fbbf24, #f59e0b)",
