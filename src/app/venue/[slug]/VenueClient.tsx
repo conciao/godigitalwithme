@@ -246,10 +246,10 @@ export default function VenueClient({ venue, slug }: VenuePageProps) {
           </h2>
         </div>
         <div className="facilities-grid" style={{ textAlign: "center" }}>
-          {venueFacilities.map((fac: any) => (
-            <div key={fac.name} className="hover-card" onClick={() => { setActiveFacility(fac); }} style={{ background: "#ffffff", padding: "2.5rem 1.5rem", borderRadius: "24px", boxShadow: "0 4px 20px rgba(0,0,0,0.03)" }}>
-              <div style={{ fontSize: "3.5rem", marginBottom: "1rem" }}>{fac.icon}</div>
-              <div style={{ fontWeight: 800, color: "#1e293b", fontSize: "1.1rem" }}>{fac.name}</div>
+          {venueFacilities?.map((fac: any) => (
+            <div key={fac?.id || fac?.name || Math.random()} className="hover-card" onClick={() => { setActiveFacility(fac); }} style={{ background: "#ffffff", padding: "2.5rem 1.5rem", borderRadius: "24px", boxShadow: "0 4px 20px rgba(0,0,0,0.03)" }}>
+              <div style={{ fontSize: "3.5rem", marginBottom: "1rem" }}>{fac?.icon || "🏢"}</div>
+              <div style={{ fontWeight: 800, color: "#1e293b", fontSize: "1.1rem" }}>{fac?.name || "Facility"}</div>
               <div style={{ color: "#6366f1", fontSize: "0.85rem", marginTop: "0.5rem", fontWeight: 600 }}>Click to view details ➡️</div>
             </div>
           ))}
@@ -275,11 +275,11 @@ export default function VenueClient({ venue, slug }: VenuePageProps) {
             <div style={{ padding: "2rem" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "1rem", flexWrap: "wrap", gap: "1rem" }}>
                 <div>
-                  <h3 style={{ fontSize: "1.8rem", fontWeight: 800, color: "#0f172a", margin: 0 }}>{activeFacility.icon} {activeFacility.name}</h3>
-                  <div style={{ color: "#64748b", fontWeight: 500, fontSize: "0.9rem", marginTop: "0.3rem" }}>📍 Size/Capacity: {activeFacility.size}</div>
+                  <h3 style={{ fontSize: "1.8rem", fontWeight: 800, color: "#0f172a", margin: 0 }}>{activeFacility?.icon} {activeFacility?.name}</h3>
+                  <div style={{ color: "#64748b", fontWeight: 500, fontSize: "0.9rem", marginTop: "0.3rem" }}>📍 Size/Capacity: {activeFacility?.size || "Not specified"}</div>
                 </div>
                 <div style={{ background: "#ccfbf1", color: "#0f766e", padding: "0.5rem 1rem", borderRadius: "50px", fontWeight: 800, fontSize: "0.95rem" }}>
-                  {activeFacility.price}
+                  {activeFacility?.price || "Contact for Price"}
                 </div>
               </div>
 
@@ -296,7 +296,7 @@ export default function VenueClient({ venue, slug }: VenuePageProps) {
               <div>
                 <div style={{ fontWeight: 700, color: "#1e293b", marginBottom: "0.8rem", fontSize: "0.95rem" }}>📋 Do's & Don'ts</div>
                 <ul style={{ padding: 0, margin: 0, listStyle: "none", display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-                  {activeFacility.dosAndDonts.map((rule: string) => (
+                  {(activeFacility?.dosAndDonts || []).map((rule: string) => (
                     <li key={rule} style={{ fontSize: "0.85rem", color: "#475569", display: "flex", gap: "0.5rem", alignItems: "center" }}>
                       <span style={{ color: "#6366f1" }}>✅</span> {rule}
                     </li>
@@ -320,10 +320,10 @@ export default function VenueClient({ venue, slug }: VenuePageProps) {
               <div key={pkg.name} style={{ background: "#ffffff", border: i === 1 ? "2px solid #6366f1" : "2px dashed #e2e8f0", borderRadius: "24px", padding: "3rem 2.5rem", position: "relative", boxShadow: i === 1 ? "0 20px 40px -10px rgba(99, 102, 241, 0.1)" : "0 10px 30px -10px rgba(0,0,0,0)", transform: i === 1 ? "scale(1.02)" : "none" }}>
                 {i === 1 && <div style={{ position: "absolute", top: "0", left: "50%", transform: "translate(-50%, -50%)", background: "linear-gradient(135deg, #6366f1, #8b5cf6)", color: "#fff", fontSize: "0.75rem", fontWeight: 800, padding: "0.5rem 1rem", borderRadius: "50px", letterSpacing: "1px", display: "flex", gap: "0.3rem", alignItems: "center", whiteSpace: "nowrap" }}>⭐ MOST CHOSEN</div>}
                 <div style={{ fontSize: "1.25rem", fontWeight: 800, color: "#0f172a", marginBottom: "0.5rem" }}>{pkg.name}</div>
-                <div style={{ fontSize: "2.5rem", fontWeight: 900, color: i === 1 ? "#0f172a" : "#475569", marginBottom: "0.5rem" }}>{pkg.price}</div>
-                <div style={{ fontSize: "0.95rem", color: "#64748b", marginBottom: "2rem", fontWeight: 500 }}>{pkg.guests}</div>
+                <div style={{ fontSize: "2.5rem", fontWeight: 900, color: i === 1 ? "#0f172a" : "#475569", marginBottom: "0.5rem" }}>{pkg?.price}</div>
+                <div style={{ fontSize: "0.95rem", color: "#64748b", marginBottom: "2rem", fontWeight: 500 }}>{pkg?.guests}</div>
                 <ul style={{ listStyle: "none", padding: 0, margin: "0 0 2.5rem", display: "flex", flexDirection: "column", gap: "1rem" }}>
-                  {pkg.includes.map((item: string) => (
+                  {(pkg?.includes || []).map((item: string) => (
                     <li key={item} style={{ fontSize: "0.95rem", color: "#334155", display: "flex", alignItems: "center", gap: "0.75rem", fontWeight: 600 }}>
                       <span style={{ color: "#6366f1", background: "#eef2ff", borderRadius: "50%", padding: "2px 6px", fontSize: "0.7rem", fontWeight: "bold" }}>✓</span> {item}
                     </li>
@@ -473,10 +473,10 @@ export default function VenueClient({ venue, slug }: VenuePageProps) {
           <div>
             <label className="custom-label">Select Facilities Needed (Multiple options)</label>
             <div className="checkbox-container">
-              {venueFacilities.map((fac: any) => (
-                <label key={fac.id || fac.name} className="checkbox-label">
-                  <input type="checkbox" name="facilities[]" value={fac.name} style={{ width: "16px", height: "16px", accentColor: "#6366f1" }} /> 
-                  {fac.icon} {fac.name}
+              {(venueFacilities || []).map((fac: any) => (
+                <label key={fac?.id || fac?.name || Math.random()} className="checkbox-label">
+                  <input type="checkbox" name="facilities[]" value={fac?.name} style={{ width: "16px", height: "16px", accentColor: "#6366f1" }} /> 
+                  {fac?.icon} {fac?.name}
                 </label>
               ))}
             </div>
