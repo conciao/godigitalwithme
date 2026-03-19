@@ -1,0 +1,13 @@
+⚡️ @cloudflare/next-on-pages CLI v.1.13.16
+
+⚡️ ERROR: Failed to produce a Cloudflare Pages build from the project.
+⚡️ 
+⚡️ 	The following routes were not configured to run with the Edge Runtime:
+⚡️ 	  - /admin
+⚡️ 
+⚡️ 	Please make sure that all your non-static routes export the following edge runtime route segment config:
+⚡️ 	  export const runtime = 'edge';
+⚡️ 
+⚡️ 	You can read more about the Edge Runtime on the Next.js documentation:
+⚡️ 	  https://nextjs.org/docs/app/building-your-application/rendering/edge-and-nodejs-runtimes
+

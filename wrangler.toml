@@ -1,0 +1,10 @@
+name = "venue-saas"
+compatibility_date = "2025-03-01"
+compatibility_flags = ["nodejs_compat"]
+pages_build_output_dir = ".vercel/output/static"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "venue-saas-db"
+database_id = "b1738b62-a308-42bf-8217-de5b0a709e95"
+migrations_dir = "migrations"

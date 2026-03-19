@@ -1,0 +1,127 @@
+﻿ΓÜí∩╕Å @cloudflare/next-on-pages CLI v.1.13.16
+ΓÜí∩╕Å Detected Package Manager: npm (9.2.0)
+ΓÜí∩╕Å Preparing project...
+ΓÜí∩╕Å Project is ready
+ΓÜí∩╕Å Building project...
+Γû▓  Vercel CLI 47.0.4
+Γû▓  WARN! Build not running on Vercel. System environment variables will not be available.
+Γû▓  Installing dependencies...
+Γû▓  up to date in 3s
+Γû▓  176 packages are looking for funding
+Γû▓  run `npm fund` for details
+Γû▓  Detected Next.js version: 15.4.11
+Γû▓  Running "npm run build"
+Γû▓  > sample-website@0.1.0 build
+Γû▓  > next build
+Γû▓  Attention: Next.js now collects completely anonymous telemetry regarding usage.
+Γû▓  This information is used to shape Next.js' roadmap and prioritize features.
+Γû▓  You can learn more, including how to opt-out if you'd not like to participate in this anonymous program, by visiting the following URL:
+Γû▓  https://nextjs.org/telemetry
+Γû▓  Γû▓ Next.js 15.4.11
+Γû▓  - Environments: .env.local
+Γû▓  
+Γû▓  Creating an optimized production build ...
+Γû▓  ΓÜá Compiled with warnings in 17.0s
+Γû▓  ./node_modules/bcryptjs/index.js
+Γû▓  A Node.js module is loaded ('crypto' at line 32) which is not supported in the Edge Runtime.
+Γû▓  Learn More: https://nextjs.org/docs/messages/node-module-in-edge-runtime
+Γû▓  
+Γû▓  Import trace for requested module:
+Γû▓  ./node_modules/bcryptjs/index.js
+Γû▓  ./src/auth.ts
+Γû▓  
+Γû▓  ./node_modules/bcryptjs/index.js
+Γû▓  A Node.js API is used (setImmediate at line: 335) which is not supported in the Edge Runtime.
+Γû▓  Learn more: https://nextjs.org/docs/api-reference/edge-runtime
+Γû▓  
+Γû▓  Import trace for requested module:
+Γû▓  ./node_modules/bcryptjs/index.js
+Γû▓  ./src/auth.ts
+Γû▓  
+Γû▓  ./node_modules/bcryptjs/index.js
+Γû▓  A Node.js API is used (setImmediate at line: 336) which is not supported in the Edge Runtime.
+Γû▓  Learn more: https://nextjs.org/docs/api-reference/edge-runtime
+Γû▓  
+Γû▓  Import trace for requested module:
+Γû▓  ./node_modules/bcryptjs/index.js
+Γû▓  ./src/auth.ts
+Γû▓  
+Γû▓  ./node_modules/jose/dist/webapi/lib/deflate.js
+Γû▓  A Node.js API is used (CompressionStream at line: 10) which is not supported in the Edge Runtime.
+Γû▓  Learn more: https://nextjs.org/docs/api-reference/edge-runtime
+Γû▓  
+Γû▓  Import trace for requested module:
+Γû▓  ./node_modules/jose/dist/webapi/lib/deflate.js
+Γû▓  ./node_modules/jose/dist/webapi/jwe/flattened/encrypt.js
+Γû▓  ./node_modules/jose/dist/webapi/index.js
+Γû▓  ./node_modules/@auth/core/jwt.js
+Γû▓  ./node_modules/@auth/core/lib/init.js
+Γû▓  ./node_modules/@auth/core/lib/index.js
+Γû▓  ./node_modules/@auth/core/index.js
+Γû▓  ./node_modules/next-auth/index.js
+Γû▓  ./src/auth.ts
+Γû▓  
+Γû▓  ./node_modules/jose/dist/webapi/lib/deflate.js
+Γû▓  A Node.js API is used (DecompressionStream at line: 26) which is not supported in the Edge Runtime.
+Γû▓  Learn more: https://nextjs.org/docs/api-reference/edge-runtime
+Γû▓  
+Γû▓  Import trace for requested module:
+Γû▓  ./node_modules/jose/dist/webapi/lib/deflate.js
+Γû▓  ./node_modules/jose/dist/webapi/jwe/flattened/encrypt.js
+Γû▓  ./node_modules/jose/dist/webapi/index.js
+Γû▓  ./node_modules/@auth/core/jwt.js
+Γû▓  ./node_modules/@auth/core/lib/init.js
+Γû▓  ./node_modules/@auth/core/lib/index.js
+Γû▓  ./node_modules/@auth/core/index.js
+Γû▓  ./node_modules/next-auth/index.js
+Γû▓  ./src/auth.ts
+Γû▓  Γ£ô Compiled successfully in 45s
+Γû▓  Skipping validation of types
+Γû▓  Skipping linting
+Γû▓  Collecting page data ...
+Γû▓  ΓÜá Using edge runtime on a page currently disables static generation for that page
+Γû▓  Generating static pages (0/5) ...
+Γû▓  Generating static pages (1/5)
+Γû▓  Generating static pages (2/5) 
+Γû▓    Generating static pages (3/5) 
+Γû▓  Γ£ô Generating static pages (5/5)
+Γû▓  Finalizing page optimization ...
+Γû▓  Collecting build traces ...
+Γû▓  
+Γû▓  Route (app)                                 Size  First Load JS
+Γû▓  Γöî Γùï /                                      145 B         100 kB
+Γû▓  Γö£ Γùï /_not-found                            993 B         101 kB
+Γû▓  Γö£ ╞Æ /admin                                 145 B         100 kB
+Γû▓  Γö£ ╞Æ /api/auth/[...nextauth]                145 B         100 kB
+Γû▓  Γö£ ╞Æ /api/companies                         145 B         100 kB
+Γû▓  Γö£ ╞Æ /api/inquiries                         145 B         100 kB
+Γû▓  Γö£ ╞Æ /api/inquiries/[id]                    145 B         100 kB
+Γû▓  Γö£ ╞Æ /dashboard                             145 B         100 kB
+Γû▓  Γö£ ╞Æ /login                                 145 B         100 kB
+Γû▓  Γöö ╞Æ /venue/[slug]                          145 B         100 kB
+Γû▓  + First Load JS shared by all            99.8 kB
+Γû▓  Γö£ chunks/4bd1b696-cf72ae8a39fa05aa.js  54.1 kB
+Γû▓  Γö£ chunks/964-9e7fd12428968086.js       43.8 kB
+Γû▓  Γöö other shared chunks (total)          1.92 kB
+Γû▓  
+Γû▓  
+Γû▓  ╞Æ Middleware                               96 kB
+Γû▓  Γùï  (Static)   prerendered as static content
+Γû▓  ╞Æ  (Dynamic)  server-rendered on demand
+Γû▓  Traced Next.js server files in: 2.424s
+Γû▓  Created all serverless functions in: 945.744ms
+Γû▓  Collected static files (public/, static/, .next/static): 60.174ms
+Γû▓  Build Completed in .vercel/output [3m]
+ΓÜí∩╕Å Completed `npx vercel build`.
+
+ΓÜí∩╕Å ERROR: Failed to produce a Cloudflare Pages build from the project.
+ΓÜí∩╕Å 
+ΓÜí∩╕Å 	The following routes were not configured to run with the Edge Runtime:
+ΓÜí∩╕Å 	  - /api/auth/[...nextauth]
+ΓÜí∩╕Å 
+ΓÜí∩╕Å 	Please make sure that all your non-static routes export the following edge runtime route segment config:
+ΓÜí∩╕Å 	  export const runtime = 'edge';
+ΓÜí∩╕Å 
+ΓÜí∩╕Å 	You can read more about the Edge Runtime on the Next.js documentation:
+ΓÜí∩╕Å 	  https://nextjs.org/docs/app/building-your-application/rendering/edge-and-nodejs-runtimes
+

@@ -1,0 +1,59 @@
+﻿ΓÜí∩╕Å @cloudflare/next-on-pages CLI v.1.13.16
+ΓÜí∩╕Å Detected Package Manager: npm (9.2.0)
+ΓÜí∩╕Å Preparing project...
+ΓÜí∩╕Å Project is ready
+ΓÜí∩╕Å Building project...
+Γû▓  WARNING! Build not running on Vercel. System environment variables will not be available.
+Γû▓  
+Γû▓  Installing dependencies...
+Γû▓  npm
+Γû▓  ERR! code ERESOLVE
+Γû▓  npm ERR!
+Γû▓  ERESOLVE could not resolve
+Γû▓  npm ERR! 
+Γû▓  npm
+Γû▓  ERR! While resolving: eslint-plugin-next-on-pages@1.13.16
+Γû▓  npm ERR! Found: eslint@9.39.4
+Γû▓  npm ERR! node_modules/eslint
+Γû▓  npm ERR!   dev eslint@"^9" from the root project
+Γû▓  npm ERR!   peer eslint@"^6.0.0 || ^7.0.0 || >=8.0.0" from @eslint-community/eslint-utils@4.9.1
+Γû▓  npm ERR!   node_modules/@eslint-community/eslint-utils
+Γû▓  npm ERR!     @eslint-community/eslint-utils@"^4.9.1" from @typescript-eslint/utils@8.57.1
+Γû▓  npm
+Γû▓  ERR!     node_modules/@typescript-eslint/utils
+Γû▓  npm ERR!       @typescript-eslint/utils@"8.57.1" from @typescript-eslint/eslint-plugin@8.57.1
+Γû▓  npm ERR!       node_modules/@typescript-eslint/eslint-plugin
+Γû▓  npm ERR!         @typescript-eslint/eslint-plugin@"^5.4.2 || ^6.0.0 || ^7.0.0 || ^8.0.0" from eslint-config-next@15.4.11
+Γû▓  npm ERR!         node_modules/eslint-config-next
+Γû▓  npm ERR!       1 more (@typescript-eslint/type-utils)
+Γû▓  npm ERR!     @eslint-community/eslint-utils@"^4.8.0" from eslint@9.39.4
+Γû▓  npm ERR!   10 more (@typescript-eslint/eslint-plugin, ...)
+Γû▓  npm ERR! 
+Γû▓  npm ERR! Could not resolve dependency:
+Γû▓  npm ERR! peer eslint@"^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0" from eslint-plugin-next-on-pages@1.13.16
+Γû▓  npm ERR! node_modules/eslint-plugin-next-on-pages
+Γû▓  npm ERR!   dev eslint-plugin-next-on-pages@"^1.13.16" from the root project
+Γû▓  npm ERR! 
+Γû▓  npm ERR! Conflicting peer dependency: eslint@8.57.1
+Γû▓  npm ERR! node_modules/eslint
+Γû▓  npm ERR!   peer eslint@"^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0 || ^8.0.0" from eslint-plugin-next-on-pages@1.13.16
+Γû▓  npm ERR!
+Γû▓  node_modules/eslint-plugin-next-on-pages
+Γû▓  npm ERR!     dev eslint-plugin-next-on-pages@"^1.13.16" from the root project
+Γû▓  npm ERR! 
+Γû▓  npm ERR! Fix the upstream dependency conflict, or retry
+Γû▓  npm ERR! this command with --force or --legacy-peer-deps
+Γû▓  npm
+Γû▓  ERR! to accept an incorrect (and potentially broken) dependency resolution.
+Γû▓  npm ERR! 
+Γû▓  npm ERR! 
+Γû▓  npm ERR! For a full report see:
+Γû▓  npm ERR! /home/conciao/.npm/_logs/2026-03-17T04_27_04_476Z-eresolve-report.txt
+Γû▓  
+Γû▓  npm ERR! A complete log of this run can be found in:
+Γû▓  npm ERR!     /home/conciao/.npm/_logs/2026-03-17T04_27_04_476Z-debug-0.log
+Γû▓  Error: Command "npm install" exited with 1
+
+ΓÜí∩╕Å The Vercel build (`npx vercel build`) command failed. For more details see the Vercel logs above.
+ΓÜí∩╕Å If you need help solving the issue, refer to the Vercel or Next.js documentation or their repositories.
+

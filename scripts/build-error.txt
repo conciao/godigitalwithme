@@ -1,0 +1,49 @@
+﻿ΓÜí∩╕Å @cloudflare/next-on-pages CLI v.1.13.16
+ΓÜí∩╕Å Detected Package Manager: npm (9.2.0)
+ΓÜí∩╕Å Preparing project...
+ΓÜí∩╕Å Project is ready
+ΓÜí∩╕Å Building project...
+Γû▓  WARNING! Build not running on Vercel. System environment variables will not be available.
+Γû▓  
+Γû▓  Installing dependencies...
+Γû▓  npm
+Γû▓  ERR! code ERESOLVE
+Γû▓  npm ERR!
+Γû▓  ERESOLVE could not resolve
+Γû▓  npm ERR!
+Γû▓  npm ERR! While resolving: @cloudflare/next-on-pages@1.13.16
+Γû▓  npm ERR!
+Γû▓  Found: next@16.1.7
+Γû▓  npm ERR! node_modules/next
+Γû▓  npm ERR!   next@"16.1.7" from the root project
+Γû▓  npm ERR!   peer next@"^14.0.0-0 || ^15.0.0 || ^16.0.0" from next-auth@5.0.0-beta.30
+Γû▓  npm ERR!   node_modules/next-auth
+Γû▓  npm
+Γû▓  ERR!     next-auth@"^5.0.0-beta.30" from the root project
+Γû▓  npm ERR! 
+Γû▓  npm ERR! Could not resolve dependency:
+Γû▓  npm ERR! peer next@">=14.3.0 && <=15.5.2" from @cloudflare/next-on-pages@1.13.16
+Γû▓  npm ERR! node_modules/@cloudflare/next-on-pages
+Γû▓  npm ERR!   dev @cloudflare/next-on-pages@"^1.13.16" from the root project
+Γû▓  npm ERR! 
+Γû▓  npm ERR! Conflicting peer dependency: next@15.4.11
+Γû▓  npm ERR! node_modules/next
+Γû▓  npm ERR!   peer next@">=14.3.0 && <=15.5.2" from @cloudflare/next-on-pages@1.13.16
+Γû▓  npm ERR!   node_modules/@cloudflare/next-on-pages
+Γû▓  npm ERR!     dev @cloudflare/next-on-pages@"^1.13.16" from the root project
+Γû▓  npm ERR! 
+Γû▓  npm ERR! Fix the upstream dependency conflict, or retry
+Γû▓  npm ERR! this command with --force or --legacy-peer-deps
+Γû▓  npm ERR! to accept an incorrect (and potentially broken) dependency resolution.
+Γû▓  npm ERR! 
+Γû▓  npm ERR! 
+Γû▓  npm ERR! For a full report see:
+Γû▓  npm ERR! /home/conciao/.npm/_logs/2026-03-17T04_23_47_668Z-eresolve-report.txt
+Γû▓  
+Γû▓  npm ERR! A complete log of this run can be found in:
+Γû▓  npm ERR!     /home/conciao/.npm/_logs/2026-03-17T04_23_47_668Z-debug-0.log
+Γû▓  Error: Command "npm install" exited with 1
+
+ΓÜí∩╕Å The Vercel build (`npx vercel build`) command failed. For more details see the Vercel logs above.
+ΓÜí∩╕Å If you need help solving the issue, refer to the Vercel or Next.js documentation or their repositories.
+

@@ -1,0 +1,36 @@
+{
+  "name": "sample-website",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "pages:build": "wsl -d kali-linux npx @cloudflare/next-on-pages",
+    "preview": "npm run pages:build && npx wrangler pages dev .vercel/output/static --d1 DB=b1738b62-a308-42bf-8217-de5b0a709e95",
+    "deploy": "(if exist .next rmdir /s /q .next) && (if exist .vercel rmdir /s /q .vercel) && npm run pages:build && npx wrangler pages deploy .vercel/output/static --project-name venue-saas"
+  },
+  "dependencies": {
+    "@auth/core": "^0.41.0",
+    "@supabase/supabase-js": "^2.99.2",
+    "next": "15.4.11",
+    "next-auth": "^5.0.0-beta.30",
+    "react": "19.2.3",
+    "react-dom": "19.2.3"
+  },
+  "devDependencies": {
+    "@cloudflare/next-on-pages": "^1.13.16",
+    "@cloudflare/workers-types": "^4.20260317.1",
+    "@tailwindcss/postcss": "^4",
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^8.57.1",
+    "eslint-config-next": "15.4.11",
+    "eslint-plugin-next-on-pages": "^1.13.16",
+    "tailwindcss": "^4",
+    "typescript": "^5",
+    "wrangler": "^4.74.0"
+  }
+}
