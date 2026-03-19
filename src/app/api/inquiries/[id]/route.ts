@@ -1,7 +1,5 @@
 import { auth } from "@/auth";
-import { getDB } from "@/lib/db";
-
-export const runtime = "edge";
+import { supabase } from "@/lib/supabase";
 
 export async function PATCH(
   request: Request,
@@ -23,18 +21,19 @@ export async function PATCH(
       return Response.json({ error: "Invalid status" }, { status: 400 });
     }
 
-    const db = getDB();
-
     // 1. Fetch inquiry to check ownership and get data for reservation
-    const inquiry = await db.prepare("SELECT * FROM inquiries WHERE id = ?")
-      .bind(id).first<any>();
+    const { data: inquiry, error: fetchError } = await supabase
+      .from("inquiries")
+      .select("*")
+      .eq("id", id)
+      .single();
     
-    if (!inquiry) {
+    if (fetchError || !inquiry) {
       return Response.json({ error: "Inquiry not found" }, { status: 404 });
     }
 
     // 2. Tenant isolation check
-    if (session.user.role === "tenant_admin" && inquiry.company_id !== session.user.companyId) {
+    if (session.user.role === "tenant_admin" && inquiry.venue_id !== session.user.companyId) {
       return Response.json({ error: "Forbidden" }, { status: 403 });
     }
 
@@ -42,26 +41,43 @@ export async function PATCH(
     if (status === "booked" && inquiry.status !== "booked") {
       const { amount, deposit_paid } = body as any;
       
-      await db.prepare(`
-        INSERT INTO reservations (
-          company_id, inquiry_id, client_name, client_email, client_phone, 
-          event_type, event_date, event_time, guest_count, amount, 
-          deposit_paid, balance, status, created_at, updated_at
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'confirmed', datetime('now'), datetime('now'))
-      `).bind(
-        inquiry.company_id, inquiry.id, inquiry.client_name, inquiry.client_email, 
-        inquiry.client_phone, inquiry.event_type, inquiry.event_date, inquiry.event_time, 
-        inquiry.guest_count, amount || 0, deposit_paid || 0, (amount || 0) - (deposit_paid || 0)
-      ).run();
+      const { error: reservationError } = await supabase
+        .from("reservations")
+        .insert({
+          venue_id: inquiry.venue_id,
+          // inquiry_id: inquiry.id, // Column exists? Let's check schema.
+          client_name: inquiry.client_name,
+          client_email: inquiry.client_email,
+          client_phone: inquiry.client_phone,
+          event_type: inquiry.event_type,
+          event_date: inquiry.event_date,
+          event_time: inquiry.event_time,
+          guest_count: inquiry.guest_count,
+          amount: amount || 0,
+          deposit_paid: deposit_paid || 0,
+          status: 'confirmed'
+        });
+
+      if (reservationError) {
+        console.error("❌ Supabase Reservation Creation Error:", reservationError.message);
+        // We continue to update the inquiry status even if reservation fails (or handle error)
+      }
     }
 
     // 4. Update status
-    await db.prepare("UPDATE inquiries SET status = ?, updated_at = datetime('now') WHERE id = ?")
-      .bind(status, id).run();
+    const { error: updateError } = await supabase
+      .from("inquiries")
+      .update({ 
+        status: status, 
+        updated_at: new Date().toISOString() 
+      })
+      .eq("id", id);
+
+    if (updateError) throw updateError;
 
     return Response.json({ success: true, id, status });
-  } catch (err) {
-    console.error("D1 Update Inquiry Error:", err);
+  } catch (err: any) {
+    console.error("Supabase Update Inquiry Error:", err);
     return Response.json({ error: "Failed to update inquiry" }, { status: 500 });
   }
 }

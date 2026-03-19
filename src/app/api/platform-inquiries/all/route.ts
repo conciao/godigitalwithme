@@ -1,8 +1,6 @@
 // src/app/api/platform-inquiries/all/route.ts
 import { auth } from "@/auth";
-import { getDB } from "@/lib/db";
-
-export const runtime = "edge";
+import { supabase } from "@/lib/supabase";
 
 export async function GET() {
   const session = await auth();
@@ -12,15 +10,16 @@ export async function GET() {
   }
 
   try {
-    const db = getDB();
-    const { results } = await db.prepare(`
-      SELECT * FROM platform_inquiries 
-      ORDER BY created_at DESC
-    `).all();
+    const { data: results, error } = await supabase
+      .from("platform_inquiries")
+      .select("*")
+      .order("created_at", { ascending: false });
+
+    if (error) throw error;
 
     return Response.json(results);
   } catch (err) {
-    console.error("D1 Fetch Error (Platform Inquiries):", err);
+    console.error("Supabase Fetch Error (Platform Inquiries):", err);
     return Response.json({ error: "Database error" }, { status: 500 });
   }
 }
