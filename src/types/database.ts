@@ -1,5 +1,5 @@
 // types/database.ts
-// TypeScript interfaces for all D1 database tables
+// TypeScript interfaces matching the Supabase PostgreSQL schema
 
 export interface Company {
   id: number;
@@ -35,7 +35,7 @@ export interface Admin {
 
 export interface Inquiry {
   id: number;
-  company_id: number;
+  venue_id: number;           // FK to venues.id (was company_id in D1)
   client_name: string;
   client_email: string;
   client_phone: string | null;
@@ -52,7 +52,7 @@ export interface Inquiry {
 
 export interface Reservation {
   id: number;
-  company_id: number;
+  venue_id: number;           // FK to venues.id (was company_id in D1)
   inquiry_id: number | null;
   client_name: string;
   client_email: string;
@@ -70,7 +70,3 @@ export interface Reservation {
   updated_at: string;
 }
 
-// Cloudflare D1 env binding type
-export interface Env {
-  DB: D1Database;
-}

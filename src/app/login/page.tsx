@@ -1,4 +1,3 @@
-export const runtime = 'edge';
 import LoginForm from "@/components/LoginForm";
 
 export default function LoginPage() {
@@ -45,20 +44,22 @@ export default function LoginPage() {
         {/* Modular LoginForm (Client Component) */}
         <LoginForm />
 
-        {/* Demo credentials hint */}
-        <div style={{
-          marginTop: "2rem",
-          padding: "1rem",
-          background: "rgba(124,58,237,0.08)",
-          borderRadius: "10px",
-          border: "1px solid rgba(124,58,237,0.15)",
-        }}>
-          <div style={{ fontSize: "0.75rem", color: "#a78bfa", fontWeight: 600, marginBottom: "0.5rem" }}>🔑 Demo Credentials</div>
-          <div style={{ fontSize: "0.78rem", color: "#6b7280", lineHeight: 1.7 }}>
-            <strong style={{ color: "#d1d5db" }}>Super Admin:</strong> admin@godigitalwithme.com / Admin@123<br />
-            <strong style={{ color: "#d1d5db" }}>Venue Admin:</strong> admin@grand-venue.com / Venue@123
+        {/* Demo credentials hint — only visible in development */}
+        {process.env.NODE_ENV === 'development' && (
+          <div style={{
+            marginTop: "2rem",
+            padding: "1rem",
+            background: "rgba(124,58,237,0.08)",
+            borderRadius: "10px",
+            border: "1px solid rgba(124,58,237,0.15)",
+          }}>
+            <div style={{ fontSize: "0.75rem", color: "#a78bfa", fontWeight: 600, marginBottom: "0.5rem" }}>🔑 Dev Credentials</div>
+            <div style={{ fontSize: "0.78rem", color: "#6b7280", lineHeight: 1.7 }}>
+              <strong style={{ color: "#d1d5db" }}>Super Admin:</strong> admin@godigitalwithme.com<br />
+              <strong style={{ color: "#d1d5db" }}>Venue Admin:</strong> admin@grand-venue.com
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

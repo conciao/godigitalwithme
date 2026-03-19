@@ -15,10 +15,10 @@ export const authConfig = {
       const { pathname } = nextUrl;
       const role = auth?.user?.role;
 
-      // Redirect on login to correct dashboard
-      if (pathname === "/" && isLoggedIn) {
-        if (role === "super_admin") return Response.redirect(new URL("/admin", nextUrl));
-        return Response.redirect(new URL("/dashboard", nextUrl));
+      // If logged-in user visits /login, redirect them to their dashboard
+      if (isLoggedIn && pathname === "/login") {
+        const dest = role === "super_admin" ? "/admin" : "/dashboard";
+        return Response.redirect(new URL(dest, nextUrl));
       }
 
       // Protected Admin Paths

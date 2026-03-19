@@ -1,5 +1,4 @@
 "use client";
-export const runtime = 'edge';
 
 import { useEffect, useState } from "react";
 import { Company } from "@/types/database";
@@ -16,14 +15,26 @@ export default function SettingsPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
+  const [loadError, setLoadError] = useState("");
+
+  const loadSettings = async () => {
+    setLoadError("");
+    setLoading(true);
+    try {
+      const res = await fetch("/api/venue/settings");
+      if (!res.ok) throw new Error(`Server responded with ${res.status}`);
+      const data = await res.json();
+      setSettings(data as Partial<Company>);
+    } catch (err: any) {
+      console.error("Settings Load Error:", err);
+      setLoadError("Failed to load your venue settings. Please check your connection and try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    fetch("/api/venue/settings")
-      .then(res => res.json())
-      .then((data: any) => {
-        setSettings(data as Partial<Company>);
-        setLoading(false);
-      });
+    loadSettings();
   }, []);
 
   const handleSave = async (e: React.FormEvent) => {
@@ -52,6 +63,14 @@ export default function SettingsPage() {
   };
 
   if (loading) return <div style={{ padding: "4rem", textAlign: "center", color: "#6b7280" }}>Loading settings...</div>;
+
+  if (loadError) return (
+    <div style={{ padding: "4rem", textAlign: "center" }}>
+      <div style={{ fontSize: "2rem", marginBottom: "1rem" }}>⚠️</div>
+      <p style={{ color: "#f87171", marginBottom: "1.5rem" }}>{loadError}</p>
+      <button onClick={loadSettings} className="btn btn--primary">Retry</button>
+    </div>
+  );
 
   return (
     <div className="animate-fade-in">

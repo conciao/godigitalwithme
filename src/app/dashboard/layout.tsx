@@ -1,5 +1,4 @@
 "use client";
-export const runtime = "edge";
 
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";

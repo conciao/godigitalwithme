@@ -1,5 +1,4 @@
 "use client";
-export const runtime = 'edge';
 
 import { useEffect, useState } from "react";
 import { Inquiry, Reservation } from "@/types/database";
@@ -63,26 +62,30 @@ export default function OverviewPage() {
     loadData();
   }, []);
 
-  // Prepare chart data (mocking some historical data if real data is single-day)
-  // In a real app we'd group by month/day in SQL
-  const inquiryChartData = [
-    { label: "Mon", value: 3 },
-    { label: "Tue", value: 5 },
-    { label: "Wed", value: 2 },
-    { label: "Thu", value: 8 },
-    { label: "Fri", value: 6 },
-    { label: "Sat", value: 10 },
-    { label: "Sun", value: 4 },
-  ];
+  // ── R-03 FIX: Compute REAL chart data from Supabase results ──────────────
 
-  const revenueChartData = [
-    { label: "Jan", value: 45000 },
-    { label: "Feb", value: 52000 },
-    { label: "Mar", value: 48000 },
-    { label: "Apr", value: 61000 },
-    { label: "May", value: 55000 },
-    { label: "Jun", value: 72000 },
-  ];
+  // Group inquiries by day-of-week (last 7 days totals per day)
+  const dayLabels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  const inquiryChartData = dayLabels.map((label, dayIndex) => ({
+    label,
+    value: inquiries.filter(iq => {
+      const d = iq.created_at ? new Date(iq.created_at).getDay() : -1;
+      return d === dayIndex;
+    }).length,
+  }));
+
+  // Group reservation revenue by month (current year)
+  const monthLabels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const currentYear = new Date().getFullYear();
+  const revenueChartData = monthLabels.map((label, monthIndex) => ({
+    label,
+    value: reservations
+      .filter(r => {
+        const d = r.created_at ? new Date(r.created_at) : null;
+        return d && d.getFullYear() === currentYear && d.getMonth() === monthIndex;
+      })
+      .reduce((sum, r) => sum + (r.amount || 0), 0),
+  }));
 
   return (
     <div className="animate-fade-in">

@@ -23,17 +23,17 @@ export async function GET() {
       .select(`
         *,
         inquiries:inquiries(count),
-        reservations:reservations(amount)
-      `);
+        reservations:reservations(count)
+      `)
+      .order("created_at", { ascending: false });
 
     if (error) throw error;
 
-    // Flatten counts and sum revenue
+    // Flatten counts for UI compatibility
     const formatted = venues.map(v => ({
       ...v,
-      inquiriesCount: v.inquiries?.[0]?.count || 0,
-      reservationsCount: v.reservations?.length || 0,
-      revenueTotal: (v.reservations || []).reduce((acc: number, r: any) => acc + (Number(r.amount) || 0), 0)
+      inquiries: v.inquiries?.[0]?.count || 0,
+      reservations: v.reservations?.[0]?.count || 0
     }));
 
     return Response.json(formatted);

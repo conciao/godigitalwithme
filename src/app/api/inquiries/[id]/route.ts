@@ -45,7 +45,6 @@ export async function PATCH(
         .from("reservations")
         .insert({
           venue_id: inquiry.venue_id,
-          // inquiry_id: inquiry.id, // Column exists? Let's check schema.
           client_name: inquiry.client_name,
           client_email: inquiry.client_email,
           client_phone: inquiry.client_phone,
@@ -58,9 +57,14 @@ export async function PATCH(
           status: 'confirmed'
         });
 
+      // L-05 FIX: If reservation creation fails, return an error.
+      // Do NOT let the inquiry be marked 'booked' without a reservation.
       if (reservationError) {
         console.error("❌ Supabase Reservation Creation Error:", reservationError.message);
-        // We continue to update the inquiry status even if reservation fails (or handle error)
+        return Response.json({ 
+          error: "Failed to create reservation. Inquiry status was not changed.",
+          details: reservationError.message
+        }, { status: 500 });
       }
     }
 

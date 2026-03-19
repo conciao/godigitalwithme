@@ -1,5 +1,4 @@
 "use client";
-export const runtime = "edge";
 
 import { useEffect, useState } from "react";
 import { Inquiry } from "@/types/database";
@@ -137,6 +136,7 @@ export default function InquiriesPage() {
                     <td data-label="Actions">
                       <div style={{ display: "flex", gap: "0.4rem", flexWrap: "wrap" }}>
                         {iq.status === "new" && (
+                          <>
                           <button 
                             className="btn btn--primary" 
                             style={{ padding: "0.3rem 0.6rem", fontSize: "0.75rem" }}
@@ -144,6 +144,14 @@ export default function InquiriesPage() {
                           >
                             Approve
                           </button>
+                          <button 
+                            className="btn btn--ghost" 
+                            style={{ padding: "0.3rem 0.6rem", fontSize: "0.75rem", color: "#f87171", borderColor: "rgba(248,113,113,0.3)" }}
+                            onClick={() => handleStatusUpdate(iq.id, "rejected")}
+                          >
+                            Decline
+                          </button>
+                          </>
                         )}
                         {iq.status === "approved" && (
                           <button 

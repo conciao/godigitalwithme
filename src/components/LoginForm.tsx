@@ -19,7 +19,7 @@ export default function LoginForm() {
           type="email"
           name="email"
           required
-          autoComplete="off"
+          autoComplete="email"
           placeholder="admin@yourvenue.com"
           style={{
             width: "100%",
@@ -43,7 +43,7 @@ export default function LoginForm() {
           type="password"
           name="password"
           required
-          autoComplete="off"
+          autoComplete="current-password"
           placeholder="••••••••"
           style={{
             width: "100%",
