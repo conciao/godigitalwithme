@@ -102,16 +102,20 @@ export default function VenueClient({ venue, slug }: VenuePageProps) {
     setIsSubmitting(false);
   };
 
-  const venuePackages = venue.packages || [
-    { name: "Wedding Package", price: "₱150,000", guests: "Up to 200 Guests", includes: ["Full Venue Access", "Catering Included", "Photoshoot Area", "Bridal Suite"] },
-    { name: "Birthday Package", price: "₱60,000", guests: "Up to 100 Guests", includes: ["Party Hall", "Basic Decorations", "Sound System"] },
-    { name: "Corporate Event", price: "₱90,000", guests: "Up to 300 Guests", includes: ["Conference Hall", "Projector & Audio", "Lunch Buffet"] },
-  ];
+  const venuePackages = (venue?.packages && Array.isArray(venue.packages) && venue.packages.length > 0) 
+    ? venue.packages 
+    : [
+        { name: "Wedding Package", price: "₱150,000", guests: "Up to 200 Guests", includes: ["Full Venue Access", "Catering Included", "Photoshoot Area", "Bridal Suite"] },
+        { name: "Birthday Package", price: "₱60,000", guests: "Up to 100 Guests", includes: ["Party Hall", "Basic Decorations", "Sound System"] },
+        { name: "Corporate Event", price: "₱90,000", guests: "Up to 300 Guests", includes: ["Conference Hall", "Projector & Audio", "Lunch Buffet"] },
+      ];
 
-  const venueFacilities = venue.facilities || [
-    { id: "pool", name: "Swimming Pool", icon: "🌊", price: "₱15,000 / Day", description: "Dive into luxury with our crystal-clear infinity pool.", photo: { url: "https://images.unsplash.com/photo-1543088925-5e608df9dff1?w=800&q=80", desc: "Main Infinity Pool View" }, dosAndDonts: ["Proper swimwear required", "No glass near the pool area"], timeIn: "8:00 AM", timeOut: "10:00 PM", size: "250 sq meters" },
-    { id: "rooms", name: "Luxury Rooms", icon: "🛏️", price: "Starts at ₱5,000 / Night", description: "Experience premium comfort in our luxury suites.", photo: { url: "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=800&q=80", desc: "Master Bedroom Suite" }, dosAndDonts: ["Maximum 4 guests per room"], timeIn: "2:00 PM", timeOut: "12:00 NN", size: "40 sq meters each" },
-  ];
+  const venueFacilities = (venue?.facilities && Array.isArray(venue.facilities) && venue.facilities.length > 0)
+    ? venue.facilities
+    : [
+        { id: "pool", name: "Swimming Pool", icon: "🌊", price: "₱15,000 / Day", description: "Dive into luxury with our crystal-clear infinity pool.", photo: { url: "https://images.unsplash.com/photo-1543088925-5e608df9dff1?w=800&q=80", desc: "Main Infinity Pool View" }, dosAndDonts: ["Proper swimwear required", "No glass near the pool area"], timeIn: "8:00 AM", timeOut: "10:00 PM", size: "250 sq meters" },
+        { id: "rooms", name: "Luxury Rooms", icon: "🛏️", price: "Starts at ₱5,000 / Night", description: "Experience premium comfort in our luxury suites.", photo: { url: "https://images.unsplash.com/photo-1522771739844-6a9f6d5f14af?w=800&q=80", desc: "Master Bedroom Suite" }, dosAndDonts: ["Maximum 4 guests per room"], timeIn: "2:00 PM", timeOut: "12:00 NN", size: "40 sq meters each" },
+      ];
 
   return (
     <div style={{ fontFamily: "var(--font-geist-sans, system-ui, sans-serif)", background: "#ffffff", color: "#111827", minHeight: "100vh", position: "relative", overflow: "hidden" }}>
