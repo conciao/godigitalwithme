@@ -1,7 +1,5 @@
 // src/app/api/platform-inquiries/route.ts
-import { getDB } from "@/lib/db";
-
-export const runtime = "edge";
+import { supabase } from "@/lib/supabase";
 
 // Handle CORS preflight requests
 export async function OPTIONS(request: Request) {
@@ -46,41 +44,27 @@ export async function POST(request: Request) {
       );
     }
 
-    let db;
-    try {
-      db = getDB();
-    } catch (dbError: any) {
-      console.error("❌ Database Binding Error:", dbError.message);
-        return Response.json(
-        { 
-          error: "D1 Database Not Bound", 
-          details: dbError.message,
-          message: "Please ensure D1 Database binding 'DB' is configured. If testing locally, use 'npm run preview' instead of 'npm run dev'."
-        }, 
-        { 
-          status: 503,
-          headers: {
-            "Access-Control-Allow-Origin": "*",
-            "Content-Type": "application/json"
-          }
-        }
+    const { error: insertError } = await supabase
+      .from("platform_inquiries")
+      .insert({
+        company_name,
+        owner_name,
+        contact_number: contact_number || "",
+        email,
+        location: location || "",
+        plan,
+        status: 'new'
+      });
+
+    if (insertError) {
+      console.error("❌ Supabase Insertion Error:", insertError.message);
+      return Response.json(
+        { error: "Failed to store inquiry in database" },
+        { status: 500 }
       );
     }
 
-    await db.prepare(`
-      INSERT INTO platform_inquiries (
-        company_name, owner_name, contact_number, email, location, plan, status, created_at, updated_at
-      ) VALUES (?, ?, ?, ?, ?, ?, 'new', datetime('now'), datetime('now'))
-    `).bind(
-      company_name, 
-      owner_name, 
-      contact_number || "", 
-      email, 
-      location || "", 
-      plan
-    ).run();
-
-    console.log("✅ Platform inquiry stored:", { company_name, email, plan });
+    console.log("✅ Platform inquiry stored in Supabase:", { company_name, email, plan });
 
     return Response.json(
       { success: true, message: "Inquiry submitted successfully!" }, 

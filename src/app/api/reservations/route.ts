@@ -1,8 +1,5 @@
 import { auth } from "@/auth";
-import { getDB } from "@/lib/db";
-import { Reservation } from "@/types/database";
-
-export const runtime = "edge";
+import { supabase } from "@/lib/supabase";
 
 export async function GET() {
   const session = await auth();
@@ -12,21 +9,21 @@ export async function GET() {
   }
 
   try {
-    const db = getDB();
-    let query = "SELECT * FROM reservations";
-    const params: any[] = [];
+    let query = supabase
+      .from("reservations")
+      .select("*");
 
     if (session.user.role === "tenant_admin") {
-      query += " WHERE company_id = ?";
-      params.push(session.user.companyId);
+      query = query.eq("venue_id", session.user.companyId);
     }
 
-    query += " ORDER BY event_date ASC";
-    const { results } = await db.prepare(query).bind(...params).all<Reservation>();
+    const { data: results, error } = await query.order("event_date", { ascending: true });
+
+    if (error) throw error;
 
     return Response.json(results);
   } catch (err) {
-    console.error("D1 Fetch Reservations Error:", err);
+    console.error("Supabase Fetch Reservations Error:", err);
     return Response.json({ error: "Database error" }, { status: 500 });
   }
 }

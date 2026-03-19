@@ -69,6 +69,20 @@ CREATE TABLE IF NOT EXISTS reservations (
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
 
+-- Platform Inquiries Table (for landing page)
+CREATE TABLE IF NOT EXISTS platform_inquiries (
+  id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+  company_name TEXT NOT NULL,
+  owner_name TEXT NOT NULL,
+  contact_number TEXT,
+  email TEXT NOT NULL,
+  location TEXT,
+  plan TEXT,
+  status TEXT DEFAULT 'new',
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
 -- ── SEED DATA ──────────────────────────────────────────────────
 
 -- 1. Grand Venue

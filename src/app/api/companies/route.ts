@@ -2,11 +2,8 @@
 // GET  /api/companies  — list all companies (super admin)
 // POST /api/companies  — create a new company (super admin)
 
-export const runtime = "edge";
-
 import { auth } from "@/auth";
-import { getDB } from "@/lib/db";
-import { Company } from "@/types/database";
+import { supabase } from "@/lib/supabase";
 
 export async function GET() {
   const session = await auth();
@@ -16,22 +13,32 @@ export async function GET() {
   }
 
   try {
-    const db = getDB();
+    // In Supabase, we can use a select with count if we have relationships set up.
+    // For simplicity, we'll fetch venues and then optionally counts if needed.
+    // But a better way in Supabase is using RPC or complex queries.
+    // Let's do a simple fetch for now to get the UI working.
     
-    // Fetch companies with inquiry and reservation counts
-    // We use a subquery or join for counts; here we use subqueries for simplicity in D1
-    const { results } = await db.prepare(`
-      SELECT 
-        c.*,
-        (SELECT COUNT(*) FROM inquiries i WHERE i.company_id = c.id) as inquiries,
-        (SELECT COUNT(*) FROM reservations r WHERE r.company_id = c.id) as reservations
-      FROM companies c
-      ORDER BY c.created_at DESC
-    `).all<Company>();
+    const { data: venues, error } = await supabase
+      .from("venues")
+      .select(`
+        *,
+        inquiries:inquiries(count),
+        reservations:reservations(count)
+      `)
+      .order("created_at", { ascending: false });
 
-    return Response.json(results);
+    if (error) throw error;
+
+    // Flatten counts for UI compatibility
+    const formatted = venues.map(v => ({
+      ...v,
+      inquiries: v.inquiries?.[0]?.count || 0,
+      reservations: v.reservations?.[0]?.count || 0
+    }));
+
+    return Response.json(formatted);
   } catch (err) {
-    console.error("D1 Fetch Error:", err);
+    console.error("Supabase Fetch Error:", err);
     return Response.json({ error: "Database error" }, { status: 500 });
   }
 }
@@ -51,23 +58,33 @@ export async function POST(request: Request) {
       return Response.json({ error: "Missing required fields: name, slug, plan" }, { status: 400 });
     }
 
-    const db = getDB();
-
     // 1. Check if slug exists
-    const existing = await db.prepare("SELECT id FROM companies WHERE slug = ?").bind(slug).first();
+    const { data: existing } = await supabase
+      .from("venues")
+      .select("id")
+      .eq("slug", slug)
+      .maybeSingle();
+
     if (existing) {
       return Response.json({ error: "A venue with this subdomain already exists." }, { status: 400 });
     }
 
-    // 2. Insert company
-    await db.prepare(`
-      INSERT INTO companies (name, slug, plan, contact_email, status, created_at, updated_at)
-      VALUES (?, ?, ?, ?, 'active', datetime('now'), datetime('now'))
-    `).bind(name, slug, plan, contact_email).run();
+    // 2. Insert venue
+    const { error: insertError } = await supabase
+      .from("venues")
+      .insert({
+        name,
+        slug,
+        plan,
+        contact_email,
+        status: 'active'
+      });
+
+    if (insertError) throw insertError;
 
     return Response.json({ success: true, message: `Company "${name}" created.` }, { status: 201 });
   } catch (err) {
-    console.error("D1 Insert Error:", err);
+    console.error("Supabase Insert Error:", err);
     return Response.json({ error: "Failed to create company" }, { status: 500 });
   }
 }
