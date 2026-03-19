@@ -1,8 +1,6 @@
 import { auth } from "@/auth";
-import { getDB } from "@/lib/db";
+import { supabase } from "@/lib/supabase";
 import { Inquiry } from "@/types/database";
-
-export const runtime = "edge";
 
 export async function GET() {
   const session = await auth();
@@ -11,20 +9,18 @@ export async function GET() {
   }
 
   try {
-    const db = getDB();
-    let query = "SELECT * FROM inquiries";
-    const params: any[] = [];
+    let query = supabase.from("inquiries").select("*");
 
     if (session.user.role === "tenant_admin") {
-      query += " WHERE company_id = ?";
-      params.push(session.user.companyId);
+      query = query.eq("venue_id", session.user.companyId);
     }
 
-    query += " ORDER BY created_at DESC";
-    const { results } = await db.prepare(query).bind(...params).all<Inquiry>();
+    const { data: results, error } = await query.order("created_at", { ascending: false });
+    
+    if (error) throw error;
     return Response.json(results);
   } catch (err) {
-    console.error("D1 Fetch Inquiries Error:", err);
+    console.error("Supabase Fetch Inquiries Error:", err);
     return Response.json({ error: "Database error" }, { status: 500 });
   }
 }
@@ -49,7 +45,7 @@ export async function POST(request: Request) {
       const data = await request.json() as Record<string, any>;
       company_slug = data.company_slug || data.compannySlug || null;
       client_name = data.client_name || data.clientName || data.name || null;
-      client_email = data.client_email || data.clientEmail || data.email || null;
+      client_email = data.client_email || data.client_email || data.email || null;
       client_phone = data.client_phone || data.clientPhone || data.phone || null;
       event_type = data.event_type || data.eventType || null;
       event_date = data.event_date || data.eventDate || null;
@@ -83,56 +79,54 @@ export async function POST(request: Request) {
       });
     }
 
-    const db = getDB();
-    console.log("🔍 Looking for company with slug:", company_slug);
+    console.log("🔍 Looking for venue with slug:", company_slug);
     
-    const company = await db.prepare("SELECT id FROM companies WHERE slug = ?")
-      .bind(company_slug).first<{ id: number }>();
+    const { data: venue, error: venueError } = await supabase
+      .from("venues")
+      .select("id")
+      .eq("slug", company_slug)
+      .single();
       
-    if (!company) {
+    if (venueError || !venue) {
       console.error("❌ Unknown venue slug:", company_slug);
-      return new Response(JSON.stringify({ error: `Unknown venue: ${company_slug}` }), { 
-        status: 404,
-        headers: { "Content-Type": "application/json" }
-      });
+      return Response.json({ error: `Unknown venue: ${company_slug}` }, { status: 404 });
     }
 
-    try {
-      await db.prepare(
-        `INSERT INTO inquiries
-         (company_id, client_name, client_email, client_phone, event_type, event_date, event_time, guest_count, facilities, message, status, created_at, updated_at)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'new', datetime('now'), datetime('now'))`
-      ).bind(company.id, client_name, client_email, client_phone, event_type, event_date, event_time, guest_count, facilities, message).run();
-
-      console.log("✅ New inquiry stored in D1 for company ID:", company.id);
-      
-      // Return JSON response or redirect based on content-type
-      if (contentType.includes("application/json")) {
-        return new Response(JSON.stringify({ 
-          success: true, 
-          message: "Inquiry submitted successfully!",
-          redirect: `/venue/${company_slug}?submitted=1`
-        }), {
-          status: 201,
-          headers: { "Content-Type": "application/json" },
-        });
-      } else {
-        const origin = new URL(request.url).origin;
-        return Response.redirect(`${origin}/venue/${company_slug}?submitted=1`, 303);
-      }
-    } catch (dbErr) {
-      console.error("❌ Database insertion error:", dbErr);
-      return new Response(JSON.stringify({ error: "Failed to store inquiry in database" }), { 
-        status: 500,
-        headers: { "Content-Type": "application/json" }
+    const { error: insertError } = await supabase
+      .from("inquiries")
+      .insert({
+        venue_id: venue.id,
+        client_name,
+        client_email,
+        client_phone,
+        event_type,
+        event_date,
+        event_time,
+        guest_count,
+        facilities,
+        message,
+        status: 'new'
       });
+
+    if (insertError) {
+      console.error("❌ Supabase insertion error:", insertError.message);
+      return Response.json({ error: "Failed to store inquiry in database" }, { status: 500 });
     }
 
+    console.log("✅ New inquiry stored in Supabase for venue ID:", venue.id);
+    
+    if (contentType.includes("application/json")) {
+      return Response.json({ 
+        success: true, 
+        message: "Inquiry submitted successfully!",
+        redirect: `/venue/${company_slug}?submitted=1`
+      }, { status: 201 });
+    } else {
+      const origin = new URL(request.url).origin;
+      return Response.redirect(`${origin}/venue/${company_slug}?submitted=1`, 303);
+    }
   } catch (err) {
     console.error("Critical Inquiry Submission Error:", err);
-    return new Response(JSON.stringify({ error: err instanceof Error ? err.message : "Server error" }), {
-      status: 500,
-      headers: { "Content-Type": "application/json" },
-    });
+    return Response.json({ error: err instanceof Error ? err.message : "Server error" }, { status: 500 });
   }
 }

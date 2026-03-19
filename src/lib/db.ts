@@ -1,28 +1,22 @@
 // src/lib/db.ts
-// Helper to access the Cloudflare D1 database from Route Handlers and Server Components
+// STUB: This file was originally used for Cloudflare D1.
+// Since we have migrated to Supabase, this is no longer used, butkept as a stub 
+// to prevent import breakage while migrating existing API routes.
+// ALL NEW CODE SHOULD USE src/lib/supabase.ts instead.
 
-import { getRequestContext } from "@cloudflare/next-on-pages";
+import { supabase } from "./supabase";
 
 /**
- * Returns the D1 database instance bound to the "DB" binding in wrangler.toml.
- * This only works in a Cloudflare Pages / Workers environment (production or wrangler dev).
+ * DEPRECATED: Returns a stub of the D1 API backed by Supabase if needed,
+ * or simply throws a warning to redirect developers to Supabase.
  */
-export function getDB(): D1Database {
-  try {
-    const ctx = getRequestContext();
-    const env = ctx?.env as any;
-    const db = env?.DB as D1Database;
-    
-    if (!db) {
-      if (process.env.NODE_ENV === "development") {
-        console.warn("⚠️ D1 Binding 'DB' not found. Ensure you are using 'wrangler pages dev'.");
-      }
-      throw new Error("D1 Database 'DB' is not bound. Please check your Cloudflare Pages settings / wrangler.toml");
+export function getDB(): any {
+  console.warn("⚠️ DEPRECATED: getDB() was called. Please migrate this route to Supabase (src/lib/supabase.ts).");
+  
+  // Return a proxy that warns on usage
+  return new Proxy({}, {
+    get() {
+      throw new Error("❌ CLOUDFARE D1 IS DISABLED. Please use Supabase instead.");
     }
-    
-    return db;
-  } catch (err) {
-    console.error("❌ Critical: getDB() failed:", err);
-    throw err;
-  }
+  });
 }
