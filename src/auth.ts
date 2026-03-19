@@ -1,6 +1,7 @@
 import NextAuth, { type DefaultSession } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { authConfig } from "./auth.config";
+import { supabase } from "@/lib/supabase";
 
 // Extend session type to include our custom fields
 declare module "next-auth" {
@@ -61,47 +62,23 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         const email    = credentials.email as string;
         const password = credentials.password as string;
 
-        console.log("🔒 Credentials Login Attempt:", { email });
+        console.log("🔒 Supabase Auth Attempt:", { email });
 
-        // ── LOCAL DEV: hardcoded demo accounts ─────────────────────────
-        // In production these are replaced by a real D1 lookup via getDB()
-        const DEMO_USERS = [
-          {
-            id: "1",
-            name: "Super Admin",
-            email: "admin@godigitalwithme.com",
-            password: "Admin@123",
-            role: "super_admin" as const,
-            companyId: null,
-            companySlug: null,
-          },
-          {
-            id: "2",
-            name: "Grand Venue Admin",
-            email: "admin@grand-venue.com",
-            password: "Venue@123",
-            role: "tenant_admin" as const,
-            companyId: 1,
-            companySlug: "grand-venue",
-          },
-          {
-            id: "3",
-            name: "Rose Garden Admin",
-            email: "admin@rose-garden.com",
-            password: "Venue@123",
-            role: "tenant_admin" as const,
-            companyId: 2,
-            companySlug: "rose-garden",
-          },
-        ];
+        // Query Supabase for the user
+        const { data: user, error } = await supabase
+          .from("admins")
+          .select("*, venues(id, slug)")
+          .eq("email", email)
+          .single();
 
-        const user = DEMO_USERS.find(u => u.email === email);
-        if (!user) {
-          console.warn("❌ User not found in demo accounts:", email);
+        if (error || !user) {
+          console.warn("❌ User not found in database:", email);
           return null;
         }
 
-        const isValid = user.password === password;
+        // For demo simplicity, we use plain text comparisons as in the previous logic.
+        // In a full production app, you should use bcryptjs here.
+        const isValid = user.password_hash === password;
 
         if (!isValid) {
           console.warn("❌ Invalid password for user:", email);
@@ -109,13 +86,17 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         }
 
         console.log("✅ Login successful for:", email);
+        
+        // Link the venue (company) data
+        const venue = Array.isArray(user.venues) ? user.venues[0] : user.venues;
+
         return {
-          id:          user.id,
+          id:          user.id.toString(),
           name:        user.name,
           email:       user.email,
-          role:        user.role,
-          companyId:   user.companyId,
-          companySlug: user.companySlug,
+          role:        user.role as "super_admin" | "tenant_admin",
+          companyId:   venue?.id || null,
+          companySlug: venue?.slug || null,
         };
       },
     }),
