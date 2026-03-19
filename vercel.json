@@ -1,8 +1,5 @@
 {
   "framework": "nextjs",
   "regions": ["sfo1"],
-  "cleanUrls": true,
-  "head": {
-    "x-content-type-options": "nosniff"
-  }
+  "cleanUrls": true
 }
