@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { Inquiry } from "@/types/database";
 import BookingModal from "@/components/BookingModal";
 import EmptyState from "@/components/EmptyState";
+import { supabase } from "@/lib/supabase";
 
 export default function InquiriesPage() {
   const [inquiries, setInquiries] = useState<Inquiry[]>([]);
@@ -27,6 +28,25 @@ export default function InquiriesPage() {
 
   useEffect(() => {
     loadData();
+
+    // ── REALTIME SUBSCRIPTION ──────────────────────────────────────────
+    // Listen for NEW inquiries inserted into the table
+    const channel = supabase
+      .channel('realtime_inquiries')
+      .on(
+        'postgres_changes', 
+        { event: 'INSERT', schema: 'public', table: 'inquiries' }, 
+        (payload) => {
+          console.log('⚡ New Inquiry Received!', payload);
+          // Prepend the new inquiry to the list
+          setInquiries((current) => [payload.new as Inquiry, ...current]);
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   const handleStatusUpdate = async (id: number, status: string) => {

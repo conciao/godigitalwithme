@@ -5,6 +5,7 @@ import { Company } from "@/types/database";
 import AddCompanyModal from "@/components/AddCompanyModal";
 import EmptyState from "@/components/EmptyState";
 import { signOut } from "next-auth/react";
+import { supabase } from "@/lib/supabase";
 
 interface PlatformInquiry {
   id: number;
@@ -52,7 +53,7 @@ export default function AdminDashboardContent() {
       const totalReservations = compData.reduce((acc, curr) => acc + (curr.reservations || 0), 0);
       
       setStats([
-        { icon: "🏢", label: "Total Companies", value: compData.length.toString(), change: "Live from D1", color: "#7c3aed" },
+        { icon: "🏢", label: "Total Companies", value: compData.length.toString(), change: "Live from Supabase", color: "#7c3aed" },
         { icon: "📋", label: "Total Inquiries", value: totalInquiries.toString(), change: "All tenants", color: "#0ea5e9" },
         { icon: "📅", label: "Reservations", value: totalReservations.toString(), change: "All time", color: "#10b981" },
         { icon: "💰", label: "Platform Revenue", value: "₱0", change: "Subscription billing TBD", color: "#f59e0b" },
@@ -66,6 +67,23 @@ export default function AdminDashboardContent() {
 
   useEffect(() => {
     loadData();
+
+    // ── REALTIME SUBSCRIPTION ──────────────────────────────────────────
+    const channel = supabase
+      .channel('realtime_platform_leads')
+      .on(
+        'postgres_changes', 
+        { event: 'INSERT', schema: 'public', table: 'platform_inquiries' }, 
+        (payload) => {
+          console.log('⚡ New Platform Lead Received!', payload);
+          setPlatformInquiries((current) => [payload.new as PlatformInquiry, ...current]);
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
 
   const handleAddSuccess = (name: string) => {
